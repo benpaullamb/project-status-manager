@@ -26,10 +26,23 @@ class ProjectManager:
         config[readme.parts[1]] = status
     
     project_manager.set_config(config)
+    print('Config initialised.')
   
-  # TODO
   def update_projects(self):
-    pass 
+    print('Updating projects')
+    print('=================')
+    config = self.get_config()
+
+    for project_name, status in config.items():
+      readme = Path('../%s/README.md' % (project_name))
+
+      old_status = self.get_readme_status(readme)
+      print('%s: %s => %s' % (project_name, old_status, status))
+      
+      self.set_readme_status(readme, status)
+    
+    print('=================')
+    print('Done.')
 
   def get_all_readme_paths(self):
     project_folder = Path('../')
@@ -44,6 +57,9 @@ class ProjectManager:
       return None
 
   def set_readme_status(self, readme, status):
+    if status not in self.statuses:
+      raise Exception('"%s" is not a valid status' % status)
+
     status_colour = self.statuses[status]
     status_badge = re.sub(r'-', '--', status)
     new_status = '![status: %s](https://img.shields.io/badge/status-%s-%s)' % (status, status_badge, status_colour)
@@ -61,4 +77,4 @@ class ProjectManager:
 
 if __name__ == '__main__':
   project_manager = ProjectManager()
-  project_manager.init_config()
+  project_manager.update_projects()
