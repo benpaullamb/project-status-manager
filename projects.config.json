@@ -1,16 +1,1 @@
-[
-  { "name": "ac-forest-gen", "status": "dropped" },
-  { "name": "amazon-extension", "status": "in-progress" },
-  { "name": "btesco-api", "status": "in progress" },
-  { "name": "common", "status": "completed" },
-  { "name": "food-diary", "status": "in progress" },
-  { "name": "food-diary-2", "status": "in progress" },
-  { "name": "kindle-notes-viewer", "status": "in progress" },
-  { "name": "knee-physio", "status": "completed" },
-  { "name": "melanoma-ai-app", "status": "completed" },
-  { "name": "natwest-extension", "status": "in-progress" },
-  { "name": "pollen-notifications", "status": "in progress" },
-  { "name": "therapy-box", "status": "completed" },
-  { "name": "training-x", "status": "dropped" },
-  { "name": "ytbl", "status": "completed" }
-]
+{ "ac-forest-gen": "dropped", "amazon-extension": "in-progress" }
