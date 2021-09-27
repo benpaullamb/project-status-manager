@@ -111,7 +111,7 @@ class ProjectManager:
       
       if 'y' in should_commit_input.lower():
         subprocess.run(['git', 'add', 'README.md'], cwd=project)
-        subprocess.run(['git', 'commit', '-m', '"chore: updated project status"'], cwd=project)
+        subprocess.run(['git', 'commit', '-m', 'chore: updated project status'], cwd=project)
         subprocess.run(['git', 'push'], cwd=project)
     
     print('Done.')
