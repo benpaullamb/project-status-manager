@@ -1,7 +1,7 @@
 import json
-import os
 from pathlib import Path
 import re
+import subprocess
 
 class ProjectManager:
   config_file = './projects.config.json'
@@ -29,19 +29,23 @@ class ProjectManager:
     print('Config initialised.')
   
   def update_projects(self):
-    print('Updating projects')
     print('=================')
+    print('Updating projects')
+    print('-----------------')
     config = self.get_config()
 
     for project_name, status in config.items():
       readme = Path('../%s/README.md' % (project_name))
 
       old_status = self.get_readme_status(readme)
-      print('%s: %s => %s' % (project_name, old_status, status))
+
+      if old_status == status:
+        print(f'[SKIPPED] {project_name}: {old_status} => {status}')
+        continue
       
+      print(f'{project_name}: {old_status} => {status}')
       self.set_readme_status(readme, status)
     
-    print('=================')
     print('Done.')
 
   def get_all_readme_paths(self):
@@ -50,15 +54,22 @@ class ProjectManager:
     return list(readmes)
 
   def get_readme_status(self, readme):
-    match = re.search(self.status_regex, readme.read_text(), re.I)
-    if match:
-      return match.group(1).strip()
-    else:
+    try:
+      readme_text = readme.read_text()
+
+      match = re.search(self.status_regex, readme_text, re.I)
+      if match:
+        return match.group(1).strip()
+      else:
+        return None
+
+    except UnicodeDecodeError:
+      print(f'Decoding error for {readme.parent}')
       return None
 
   def set_readme_status(self, readme, status):
     if status not in self.statuses:
-      raise Exception('"%s" is not a valid status' % status)
+      return print(f'"{status}" is not a valid status')
 
     status_colour = self.statuses[status]
     status_badge = re.sub(r'-', '--', status)
@@ -73,8 +84,41 @@ class ProjectManager:
 
   def set_config(self, config):
     with open(self.config_file, 'w') as file:
-      json.dump(config, file)
+      json.dump(config, file, indent=2)
+  
+  def commit_to_github(self):
+    print('====================')
+    print('Committing to GitHub')
+    print('--------------------')
+
+    project_folder = Path(__file__).joinpath('../../').resolve()
+
+    for project in project_folder.iterdir():
+      if project.name == 'project-status-manager':
+        continue
+
+      git_status = subprocess.run(['git', 'status'], cwd=project, capture_output=True, text=True)
+      is_mods = re.search('modified:\s*README.md', git_status.stdout)
+
+      if not is_mods:
+        continue
+      
+      print(f'\n{project.name.upper()} HAS CHANGED:')
+      print('--------------------------------------')
+      print(git_status.stdout)
+
+      should_commit_input = input('Commit & push? (y/n)')
+      
+      if 'y' in should_commit_input.lower():
+        subprocess.run(['git', 'add', 'README.md'], cwd=project)
+        subprocess.run(['git', 'commit', '-m', '"chore: updated project status"'], cwd=project)
+        subprocess.run(['git', 'push'], cwd=project)
+    
+    print('Done.')
+
 
 if __name__ == '__main__':
   project_manager = ProjectManager()
+  # project_manager.init_config()
   project_manager.update_projects()
+  project_manager.commit_to_github()

@@ -1,1 +1,17 @@
-{ "ac-forest-gen": "completed", "amazon-extension": "completed" }
+{
+  "ac-forest-gen": "completed",
+  "amazon-extension": "completed",
+  "anime-search": "completed",
+  "btesco-api": "dropped",
+  "common": "completed",
+  "food-diary": "dropped",
+  "food-diary-2": "dropped",
+  "kindle-notes-viewer": "plan-to-finish",
+  "knee-physio": "completed",
+  "natwest-extension": "completed",
+  "pollen-notifications": "dropped",
+  "readme-generator": "in-progress",
+  "therapy-box": "completed",
+  "training-x": "dropped",
+  "ytbl": "completed"
+}
