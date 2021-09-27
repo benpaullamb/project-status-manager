@@ -54,8 +54,6 @@ source .venv/bin/activate
 
 ## Roadmap
 
-No planned features.
-
 - [ ] CLI?
 
 ## Release History
